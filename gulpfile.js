@@ -1,10 +1,18 @@
 const { series, src, dest, watch } = require("gulp");
 const sass = require("gulp-sass");
+const imagemin = require("gulp-imagemin");
+const notify = require("gulp-notify");
+const webp = require("gulp-webp");
 
 // Function that compiles SASS
 
+const paths = {
+  images: "src/img/**/*",
+  scss: "src/scss/**/*.scss",
+};
+
 function css() {
-  return src("src/scss/app.scss")
+  return src(paths.scss)
     .pipe(
       sass({
         outputStyle: "expanded",
@@ -14,7 +22,7 @@ function css() {
 }
 
 function mincss() {
-  return src("src/scss/app.scss")
+  return src("paths.scss")
     .pipe(
       sass({
         outputStyle: "compressed",
@@ -23,10 +31,28 @@ function mincss() {
     .pipe(dest("./build/css"));
 }
 
+function images() {
+  return src(paths.images)
+    .pipe(imagemin())
+    .pipe(dest("./build/img"))
+    .pipe(notify({ message: "Minified image" }));
+}
+
+function convertWebp() {
+  return src(paths.images)
+    .pipe(webp())
+    .pipe(dest("./build/img"))
+    .pipe(notify({ message: "Version webp Done!" }));
+}
+
 function watchArchives() {
-  watch("src/scss/**/*.scss", css); // ** = all files,  * =  extension
+  watch(paths.scss, css); // ** = all files,  * =  extension
 }
 
 exports.css = css;
 exports.mincss = mincss;
+exports.images = images;
+exports.convertWebp = convertWebp;
 exports.watchArchives = watchArchives;
+
+exports.default = series(css, images, convertWebp, watchArchives);
