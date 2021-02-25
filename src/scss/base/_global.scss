@@ -12,6 +12,10 @@ html {
 body {
   font-family: $mainFont;
   font-size: 1.6rem;
+
+  &.fix-body {
+    overflow: hidden;
+  }
 }
 
 .container {

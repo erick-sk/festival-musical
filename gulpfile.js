@@ -3,12 +3,14 @@ const sass = require("gulp-sass");
 const imagemin = require("gulp-imagemin");
 const notify = require("gulp-notify");
 const webp = require("gulp-webp");
+const concat = require("gulp-concat");
 
 // Function that compiles SASS
 
 const paths = {
   images: "src/img/**/*",
   scss: "src/scss/**/*.scss",
+  js: "src/js/**/*.js",
 };
 
 function css() {
@@ -31,6 +33,10 @@ function mincss() {
     .pipe(dest("./build/css"));
 }
 
+function javascript() {
+  return src(paths.js).pipe(concat("bundle.js")).pipe(dest("./build/js"));
+}
+
 function images() {
   return src(paths.images)
     .pipe(imagemin())
@@ -46,7 +52,8 @@ function convertWebp() {
 }
 
 function watchArchives() {
-  watch(paths.scss, css); // ** = all files,  * =  extension
+  watch(paths.scss, css);
+  watch(paths.js, javascript); // ** = all files,  * =  extension
 }
 
 exports.css = css;
@@ -55,4 +62,4 @@ exports.images = images;
 exports.convertWebp = convertWebp;
 exports.watchArchives = watchArchives;
 
-exports.default = series(css, images, convertWebp, watchArchives);
+exports.default = series(css, javascript, images, convertWebp, watchArchives);
