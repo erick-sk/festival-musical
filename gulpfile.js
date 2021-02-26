@@ -5,7 +5,15 @@ const notify = require("gulp-notify");
 const webp = require("gulp-webp");
 const concat = require("gulp-concat");
 
-// Function that compiles SASS
+// CSS utilities
+const autoprefixer = require("autoprefixer");
+const postcss = require("gulp-postcss");
+const cssnano = require("cssnano");
+const sourcemaps = require("gulp-sourcemaps");
+
+// JS utilities
+const terser = require("gulp-terser-js");
+const rename = require("gulp-rename");
 
 const paths = {
   images: "src/img/**/*",
@@ -13,13 +21,13 @@ const paths = {
   js: "src/js/**/*.js",
 };
 
+// Function that compiles SASS
 function css() {
   return src(paths.scss)
-    .pipe(
-      sass({
-        outputStyle: "expanded",
-      })
-    )
+    .pipe(sourcemaps.init())
+    .pipe(sass())
+    .pipe(postcss([autoprefixer(), cssnano()]))
+    .pipe(sourcemaps.write("."))
     .pipe(dest("./build/css"));
 }
 
@@ -34,7 +42,13 @@ function mincss() {
 }
 
 function javascript() {
-  return src(paths.js).pipe(concat("bundle.js")).pipe(dest("./build/js"));
+  return src(paths.js)
+    .pipe(sourcemaps.init())
+    .pipe(concat("bundle.js"))
+    .pipe(terser())
+    .pipe(sourcemaps.write("."))
+    .pipe(rename({ suffix: ".min" }))
+    .pipe(dest("./build/js"));
 }
 
 function images() {
