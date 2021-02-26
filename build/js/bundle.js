@@ -51,5 +51,5 @@ function showImage(e) {
   // Show in HTML
   const body = document.querySelector("body");
   body.appendChild(overlay);
-  body.classList.add("fix-body");
+  body.classList.add(".fix-body");
 }
