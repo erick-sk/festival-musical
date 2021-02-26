@@ -10,9 +10,9 @@ function fixNav() {
   // Register intersection observer
   const observer = new IntersectionObserver(function (entries) {
     if (entries[0].isIntersecting) {
-      barr.classList.remove("fix");
+      barr.classList.remove(".fix");
     } else {
-      barr.classList.add("fix");
+      barr.classList.add(".fix");
     }
   });
   // Element to see
